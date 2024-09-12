@@ -30,7 +30,7 @@ const storage = multer.diskStorage({
     cb(null, uploadsDir)
   },
   filename: function (req, file, cb) {
-    cb(null, file.fieldname + '-' + Date.now() + path.extname(file.originalname))
+    cb(null, file.originalname)
   }
 });
 
@@ -46,7 +46,8 @@ app.post('/process', upload.fields([
 
   const mainAudioFile = req.files.mainAudio[0].path;
   const shortAudioFiles = req.files.shortAudios.map(file => file.path);
-  const outputFileName = `output_${Date.now()}.aac`;
+  const firstAudioOriginalName = path.parse( req.files.mainAudio[0].originalname).name;
+  const outputFileName = `${firstAudioOriginalName}.aac`;
   const finalOutputPath = path.join(publicDir, outputFileName);
 
   console.log('Starting audio processing...');
